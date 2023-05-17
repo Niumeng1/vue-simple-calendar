@@ -3,137 +3,44 @@
 		<div class="calendar-controls">
 			<div v-if="state.message" class="notification is-success">{{ state.message }}</div>
 
-			<div class="box">
-				<h4 class="title is-5">Play with the options!</h4>
-
-				<div class="field">
-					<label class="label">Period UOM</label>
-					<div class="control">
-						<div class="select">
-							<select v-model="state.displayPeriodUom">
-								<option>month</option>
-								<option>week</option>
-								<option>year</option>
-							</select>
-						</div>
-					</div>
-				</div>
-
-				<div class="field">
-					<label class="label">Period Count</label>
-					<div class="control">
-						<div class="select">
-							<select v-model="state.displayPeriodCount">
-								<option :value="1">1</option>
-								<option :value="2">2</option>
-								<option :value="3">3</option>
-							</select>
-						</div>
-					</div>
-				</div>
-
-				<div class="field">
-					<label class="label">Starting day of the week</label>
-					<div class="control">
-						<div class="select">
-							<select v-model="state.startingDayOfWeek">
-								<option v-for="(d, index) in dayNames" :key="index" :value="index">
-									{{ d }}
-								</option>
-							</select>
-						</div>
-					</div>
-				</div>
-
-				<div class="field">
-					<label class="checkbox">
-						<input v-model="state.useTodayIcons" type="checkbox" />
-						Use icon for today's period
-					</label>
-				</div>
-
-				<div class="field">
-					<label class="checkbox">
-						<input v-model="state.displayWeekNumbers" type="checkbox" />
-						Show week number
-					</label>
-				</div>
-
-				<div class="field">
-					<label class="checkbox">
-						<input v-model="state.showTimes" type="checkbox" />
-						Show times
-					</label>
-				</div>
-
-				<div class="field">
-					<label class="label">Themes</label>
-					<label class="checkbox">
-						<input v-model="state.useDefaultTheme" type="checkbox" />
-						Default
-					</label>
-				</div>
-
-				<div class="field">
-					<label class="checkbox">
-						<input v-model="state.useHolidayTheme" type="checkbox" />
-						Holidays
-					</label>
-				</div>
-			</div>
 
 			<div class="box">
 				<div class="field">
-					<label class="label">Title</label>
+					<label class="label">项目名-负责人</label>
 					<div class="control">
 						<input v-model="state.newItemTitle" class="input" type="text" />
 					</div>
 				</div>
 
 				<div class="field">
-					<label class="label">Start date</label>
+					<label class="label">开始日期</label>
 					<div class="control">
 						<input v-model="state.newItemStartDate" class="input" type="date" />
 					</div>
 				</div>
 
 				<div class="field">
-					<label class="label">End date</label>
+					<label class="label">结束日期</label>
 					<div class="control">
 						<input v-model="state.newItemEndDate" class="input" type="date" />
 					</div>
 				</div>
 
-				<button class="button is-info" @click="clickTestAddItem">Add Item</button>
+				<button class="button is-info" @click="clickTestAddItem">添加</button>
+				<button class="button is-info" style="margin-left:10px;" @click="clickTestDelItem">删除</button>
 			</div>
 		</div>
 		<div class="calendar-parent">
-			<CalendarView
-				:items="state.items"
-				:show-date="state.showDate"
-				:time-format-options="{ hour: 'numeric', minute: '2-digit' }"
-				:enable-drag-drop="true"
-				:disable-past="state.disablePast"
-				:disable-future="state.disableFuture"
-				:show-times="state.showTimes"
-				:date-classes="myDateClasses()"
-				:display-period-uom="state.displayPeriodUom"
-				:display-period-count="state.displayPeriodCount"
-				:starting-day-of-week="state.startingDayOfWeek"
-				:class="themeClasses"
-				:period-changed-callback="periodChanged"
-				:current-period-label="state.useTodayIcons ? 'icons' : ''"
-				:displayWeekNumbers="state.displayWeekNumbers"
-				:enable-date-selection="true"
-				:selection-start="state.selectionStart"
-				:selection-end="state.selectionEnd"
-				@date-selection-start="setSelection"
-				@date-selection="setSelection"
-				@date-selection-finish="finishSelection"
-				@drop-on-date="onDrop"
-				@click-date="onClickDay"
-				@click-item="onClickItem"
-			>
+			<CalendarView :items="state.items" :show-date="state.showDate"
+				:time-format-options="{ hour: 'numeric', minute: '2-digit' }" :enable-drag-drop="true"
+				:disable-past="state.disablePast" :disable-future="state.disableFuture" :show-times="state.showTimes"
+				:date-classes="myDateClasses()" :display-period-uom="state.displayPeriodUom"
+				:display-period-count="state.displayPeriodCount" :starting-day-of-week="state.startingDayOfWeek"
+				:class="themeClasses" :period-changed-callback="periodChanged"
+				:current-period-label="state.useTodayIcons ? 'icons' : ''" :displayWeekNumbers="state.displayWeekNumbers"
+				:enable-date-selection="true" :selection-start="state.selectionStart" :selection-end="state.selectionEnd"
+				@date-selection-start="setSelection" @date-selection="setSelection" @date-selection-finish="finishSelection"
+				@drop-on-date="onDrop" @click-date="onClickDay" @click-item="onClickItem">
 				<template #header="{ headerProps }">
 					<CalendarViewHeader :header-props="headerProps" @input="setShowDate" />
 				</template>
@@ -148,9 +55,8 @@ import CalendarView from "../../vue-simple-calendar/src/CalendarView.vue"
 import CalendarViewHeader from "../../vue-simple-calendar/src/CalendarViewHeader.vue"
 import CalendarMath from "../../vue-simple-calendar/src/CalendarMath"
 import { ICalendarItem, INormalizedCalendarItem } from "./ICalendarItem"
-
-import { onMounted, reactive, computed } from "vue"
-
+import { onMounted, reactive, computed } from "vue";
+import { getJSONData, writeJSONData } from "./api/index"
 const thisMonth = (d: number, h?: number, m?: number): Date => {
 	const t = new Date()
 	return new Date(t.getFullYear(), t.getMonth(), d, h || 0, m || 0)
@@ -176,6 +82,15 @@ interface IExampleState {
 	useTodayIcons: boolean
 	items: ICalendarItem[]
 }
+let jsondata = reactive({
+	data: []
+})
+const getJsonData1 = () => {
+	getJSONData().then(res => {
+		console.log(res);
+		state.items = res;
+	});
+}
 
 const state = reactive({
 	/* Show the current month, and give it some fake items to show */
@@ -190,91 +105,16 @@ const state = reactive({
 	showTimes: true,
 	selectionStart: undefined,
 	selectionEnd: undefined,
-	newItemTitle: "",
+	newItemTitle: "xxx项目-x某",
 	newItemStartDate: "",
 	newItemEndDate: "",
 	useDefaultTheme: true,
 	useHolidayTheme: true,
 	useTodayIcons: false,
-	items: [
-		/*{
-			id: "e0",
-			startDate: "2018-01-05",
-		},*/
-		{
-			id: "e1",
-			startDate: thisMonth(15, 18, 30),
-		},
-		{
-			id: "e2",
-			startDate: thisMonth(15),
-			title: "Single-day item with a long title",
-		},
-		{
-			id: "e3",
-			startDate: thisMonth(7, 9, 25),
-			endDate: thisMonth(10, 16, 30),
-			title: "Multi-day item with a long title and times",
-		},
-		{
-			id: "e4",
-			startDate: thisMonth(20),
-			title: "My Birthday!",
-			classes: "birthday",
-			url: "https://en.wikipedia.org/wiki/Birthday",
-		},
-		{
-			id: "e5",
-			startDate: thisMonth(5),
-			endDate: thisMonth(12),
-			title: "Multi-day item",
-			classes: "purple",
-			tooltip: "This spans multiple days",
-		},
-		{
-			id: "foo",
-			startDate: thisMonth(29),
-			title: "Same day 1",
-		},
-		{
-			id: "e6",
-			startDate: thisMonth(29),
-			title: "Same day 2",
-			classes: "orange",
-		},
-		{
-			id: "e7",
-			startDate: thisMonth(29),
-			title: "Same day 3",
-		},
-		{
-			id: "e8",
-			startDate: thisMonth(29),
-			title: "Same day 4",
-			classes: "orange",
-		},
-		{
-			id: "e9",
-			startDate: thisMonth(29),
-			title: "Same day 5",
-		},
-		{
-			id: "e10",
-			startDate: thisMonth(29),
-			title: "Same day 6",
-			classes: "orange",
-		},
-		{
-			id: "e11",
-			startDate: thisMonth(29),
-			title: "Same day 7",
-		},
-	],
+	items: [],
 } as IExampleState)
 
-const userLocale = computed((): string => CalendarMath.getDefaultBrowserLocale())
-
-const dayNames = computed((): string[] => CalendarMath.getFormattedWeekdayNames(userLocale.value, "long", 0))
+// const userLocale = computed((): string => CalendarMath.getDefaultBrowserLocale())
 
 const themeClasses = computed(() => ({
 	"theme-default": state.useDefaultTheme,
@@ -299,7 +139,8 @@ const myDateClasses = (): Record<string, string[]> => {
 
 onMounted((): void => {
 	state.newItemStartDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
-	state.newItemEndDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
+	state.newItemEndDate = CalendarMath.isoYearMonthDay(CalendarMath.today());
+	getJsonData1();
 })
 
 const periodChanged = (): void => {
@@ -313,11 +154,14 @@ const periodChanged = (): void => {
 const onClickDay = (d: Date): void => {
 	state.selectionStart = undefined
 	state.selectionEnd = undefined
-	state.message = `You clicked: ${d.toLocaleDateString()}`
+	state.message = `当前选中日期: ${d.toLocaleDateString()}`
 }
 
 const onClickItem = (e: INormalizedCalendarItem): void => {
-	state.message = `You clicked: ${e.title}`
+	state.message = `当前选中: ${e.title}`
+	state.newItemTitle = e.title
+	state.newItemStartDate = CalendarMath.isoYearMonthDay(e.startDate)
+	state.newItemEndDate = CalendarMath.isoYearMonthDay(e.endDate)
 }
 
 const setShowDate = (d: Date): void => {
@@ -343,14 +187,46 @@ const onDrop = (item: INormalizedCalendarItem, date: Date): void => {
 	item.originalItem.startDate = CalendarMath.addDays(item.startDate, eLength)
 	item.originalItem.endDate = CalendarMath.addDays(item.endDate, eLength)
 }
-
+const clickTestDelItem = (): void => {
+	state.items = state.items.filter((i) => i.title !== state.newItemTitle)
+	writeJSONData(state.items).then(() => { })
+}
 const clickTestAddItem = (): void => {
-	state.items.push({
-		startDate: CalendarMath.fromIsoStringToLocalDate(state.newItemStartDate),
-		endDate: CalendarMath.fromIsoStringToLocalDate(state.newItemEndDate),
-		title: state.newItemTitle,
-		id: "e" + Math.random().toString(36).substring(2, 11),
-	})
+
+	if (state.items.length > 0) {
+		let flag = false;
+		state.items.forEach((i) => {
+			if (i.title === state.newItemTitle && i.startDate === state.newItemStartDate) {
+				i.startDate = state.newItemStartDate
+				i.endDate = state.newItemEndDate
+				i.title = state.newItemTitle
+				flag = true;
+
+			}
+		})
+		if (!flag) {
+			console.log(state.newItemStartDate)
+			state.items.push({
+				startDate: state.newItemStartDate,
+				endDate: state.newItemEndDate,
+				title: state.newItemTitle,
+				id: "e" + Math.random().toString(36).substring(2, 11),
+			})
+
+		}
+
+	} else {
+		state.items.push({
+			startDate: state.newItemStartDate,
+			endDate: state.newItemEndDate,
+			title: state.newItemTitle,
+			id: "e" + Math.random().toString(36).substring(2, 11),
+		});
+
+	}
+
+	console.log(">>", state.items);
+	writeJSONData(state.items).then(() => { })
 	state.message = "You added a calendar item!"
 }
 </script>
@@ -405,7 +281,8 @@ const clickTestAddItem = (): void => {
 }
 
 #example-full .theme-default .cv-item.birthday::before {
-	content: "\1F382"; /* Birthday cake */
+	content: "\1F382";
+	/* Birthday cake */
 	margin-right: 0.5em;
 }
 
