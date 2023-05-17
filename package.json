@@ -49,7 +49,10 @@
 		"axios": "^1.4.0",
 		"express": "^4.18.2",
 		"fs-extra": "^11.1.1",
-		"vue": "^3.2.47"
+		"nprogress": "^0.2.0",
+		"vite-plugin-html-config": "^1.0.11",
+		"vue": "^3.2.47",
+		"vue-router": "^4.2.0"
 	},
 	"devDependencies": {
 		"@typescript-eslint/parser": "^5.51.0",

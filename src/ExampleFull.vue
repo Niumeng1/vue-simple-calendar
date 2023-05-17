@@ -57,10 +57,12 @@ import CalendarMath from "../../vue-simple-calendar/src/CalendarMath"
 import { ICalendarItem, INormalizedCalendarItem } from "./ICalendarItem"
 import { onMounted, reactive, computed } from "vue";
 import { getJSONData, writeJSONData } from "./api/index"
+import { useRoute } from 'vue-router'
 const thisMonth = (d: number, h?: number, m?: number): Date => {
 	const t = new Date()
 	return new Date(t.getFullYear(), t.getMonth(), d, h || 0, m || 0)
 }
+const route = useRoute()
 
 interface IExampleState {
 	showDate: Date
@@ -86,7 +88,7 @@ let jsondata = reactive({
 	data: []
 })
 const getJsonData1 = () => {
-	getJSONData().then(res => {
+	getJSONData(paramsName.value).then(res => {
 		console.log(res);
 		state.items = res;
 	});
@@ -136,11 +138,18 @@ const myDateClasses = (): Record<string, string[]> => {
 	o[CalendarMath.isoYearMonthDay(thisMonth(21))] = ["do-you-remember", "the-21st"]
 	return o
 }
-
+const paramsName: string = computed(() => {
+	return route.params.name
+})
 onMounted((): void => {
 	state.newItemStartDate = CalendarMath.isoYearMonthDay(CalendarMath.today())
 	state.newItemEndDate = CalendarMath.isoYearMonthDay(CalendarMath.today());
 	getJsonData1();
+
+	if (paramsName.value != "") {
+		localStorage.setItem("name", paramsName.value);
+	}
+	console.log(paramsName.value, "<<");
 })
 
 const periodChanged = (): void => {

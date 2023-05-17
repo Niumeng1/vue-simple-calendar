@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: 牛猛
  * @Date: 2023-05-15 10:29:32
- * @LastEditTime: 2023-05-16 18:01:17
+ * @LastEditTime: 2023-05-17 13:09:47
  * @LastEditors: nm
  * @FilePath: \vue-simple-calendar\src\api\request.ts
  */
@@ -20,7 +20,9 @@ import axios, { AxiosInstance, AxiosError, AxiosRequestConfig, InternalAxiosRequ
  interface ResultData<T = any> extends Result {
 	data: T;
 }
-
+const getName = () => {
+	return localStorage.getItem("name");
+}
 const config = {
 	// 默认地址请求地址，可在 .env.*** 文件中修改
 	baseURL: import.meta.env.VITE_API_URL as string,
@@ -46,7 +48,7 @@ class RequestHttp {
 				// const globalStore = GlobalStore();
 				// * 如果当前请求不需要显示 loading,在 api 服务中通过指定的第三个参数: { headers: { noLoading: true } }来控制不显示loading，参见loginApi
 	
-				//if(config.headers && config.headers?.token) config.headers.set("token", token);
+				if(config.headers ) config.headers.set("name", getName() as string);
 
 				//if (config.headers && typeof config.headers?.set === "function") config.headers.set("token", token);
 				return config;
