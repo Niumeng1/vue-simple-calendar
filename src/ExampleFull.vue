@@ -58,6 +58,7 @@ import { ICalendarItem, INormalizedCalendarItem } from "./ICalendarItem"
 import { onMounted, reactive, computed } from "vue";
 import { getJSONData, writeJSONData } from "./api/index"
 import { useRoute } from 'vue-router'
+import { dataUtils } from "./utils/dataUtils";
 const thisMonth = (d: number, h?: number, m?: number): Date => {
 	const t = new Date()
 	return new Date(t.getFullYear(), t.getMonth(), d, h || 0, m || 0)
@@ -205,7 +206,7 @@ const clickTestAddItem = (): void => {
 	if (state.items.length > 0) {
 		let flag = false;
 		state.items.forEach((i) => {
-			if (i.title === state.newItemTitle && i.startDate === state.newItemStartDate) {
+			if (i.id === state.id) {
 				i.startDate = state.newItemStartDate
 				i.endDate = state.newItemEndDate
 				i.title = state.newItemTitle
@@ -219,7 +220,7 @@ const clickTestAddItem = (): void => {
 				startDate: state.newItemStartDate,
 				endDate: state.newItemEndDate,
 				title: state.newItemTitle,
-				id: "e" + Math.random().toString(36).substring(2, 11),
+				id: dataUtils.uuid(),
 			})
 
 		}
@@ -229,7 +230,7 @@ const clickTestAddItem = (): void => {
 			startDate: state.newItemStartDate,
 			endDate: state.newItemEndDate,
 			title: state.newItemTitle,
-			id: "e" + Math.random().toString(36).substring(2, 11),
+			id: dataUtils.uuid(),
 		});
 
 	}
